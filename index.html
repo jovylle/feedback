@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feedback</title>
+    <meta
+      name="description"
+      content="Send feedback quickly. Your message goes straight to our inbox."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="hero" aria-label="Feedback page">
+        <div class="hero__content">
+          <p class="kicker">feedback.uft1.com</p>
+          <h1>Send feedback</h1>
+          <p class="lede">
+            Have a suggestion, found a bug, or want to request something? Drop it
+            here—takes under a minute.
+          </p>
+          <ul class="bullets" aria-label="Why share feedback">
+            <li>Quick and simple</li>
+            <li>No account needed</li>
+            <li>We read every message</li>
+          </ul>
+        </div>
+
+        <section class="card" aria-label="Feedback form">
+          <form
+            class="form"
+            action="https://api.web3forms.com/submit"
+            method="POST"
+          >
+            <input
+              type="hidden"
+              name="access_key"
+              value="4a0e9849-ac3e-47bd-a6c6-005fd77823ed"
+            />
+            <input type="hidden" name="subject" value="New feedback submission" />
+            <input type="hidden" name="from_name" value="feedback.uft1.com" />
+
+            <div class="field">
+              <label for="name">Name</label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                autocomplete="name"
+                required
+                placeholder="Jane Doe"
+              />
+            </div>
+
+            <div class="field">
+              <label for="email">Email</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                required
+                placeholder="jane@domain.com"
+              />
+              <p class="hint">We’ll only use this to follow up if needed.</p>
+            </div>
+
+            <div class="field">
+              <label for="message">Message</label>
+              <textarea
+                id="message"
+                name="message"
+                required
+                rows="7"
+                placeholder="What should we improve? Include steps, links, screenshots, or device info if relevant."
+              ></textarea>
+            </div>
+
+            <button class="button" type="submit">Submit feedback</button>
+
+            <p class="fineprint">
+              By submitting, you confirm this message is non-sensitive. Don’t
+              include passwords, API keys, or private data.
+            </p>
+          </form>
+        </section>
+      </header>
+
+      <footer class="footer" aria-label="Footer">
+        <p>
+          Tip: for bugs, include what you expected vs what happened, and your
+          browser/device.
+        </p>
+      </footer>
+    </main>
+  </body>
+</html>
