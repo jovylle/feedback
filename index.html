@@ -25,11 +25,17 @@
             <li>No account needed</li>
             <li>We read every message</li>
           </ul>
+
+          <p class="meta">
+            <a href="/about/">About this page</a> ·
+            <a href="https://github.com/jovylle/feedback" target="_blank" rel="noopener">GitHub</a>
+          </p>
         </div>
 
         <section class="card" aria-label="Feedback form">
           <form
             class="form"
+            id="feedback-form"
             action="https://api.web3forms.com/submit"
             method="POST"
           >
@@ -40,6 +46,8 @@
             />
             <input type="hidden" name="subject" value="New feedback submission" />
             <input type="hidden" name="from_name" value="feedback.uft1.com" />
+            <input type="hidden" name="otherinfo" id="otherinfo" value="" />
+            <input type="hidden" name="for" id="for" value="" />
 
             <div class="field">
               <label for="name">Name</label>
@@ -78,6 +86,7 @@
             </div>
 
             <button class="button" type="submit">Submit feedback</button>
+            <p class="status" id="form-status" aria-live="polite"></p>
 
             <p class="fineprint">
               By submitting, you confirm this message is non-sensitive. Don’t
@@ -94,5 +103,54 @@
         </p>
       </footer>
     </main>
+
+    <script>
+      const form = document.getElementById('feedback-form');
+      const statusEl = document.getElementById('form-status');
+      const otherInfo = document.getElementById('otherinfo');
+      const forField = document.getElementById('for');
+
+      function setStatus(message, type) {
+        statusEl.textContent = message;
+        statusEl.className = `status status--${type}`;
+      }
+
+      function parseQuery() {
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('otherinfo')) {
+          otherInfo.value = params.get('otherinfo') || '';
+        }
+        if (params.has('for')) {
+          forField.value = params.get('for') || '';
+        }
+      }
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        setStatus('Sending feedback…', 'pending');
+        const formData = new FormData(form);
+
+        try {
+          const response = await fetch(form.action, {
+            method: form.method,
+            body: formData,
+          });
+          const result = await response.json();
+
+          if (!response.ok || result.success !== true) {
+            throw new Error(result.message || 'Submission failed.');
+          }
+
+          setStatus('Thanks! Your feedback was submitted successfully.', 'success');
+          form.reset();
+          parseQuery();
+        } catch (error) {
+          console.error(error);
+          setStatus('Oops — could not submit feedback. Please try again.', 'error');
+        }
+      });
+
+      parseQuery();
+    </script>
   </body>
 </html>

@@ -177,6 +177,24 @@ textarea:focus {
   color: var(--muted-2);
 }
 
+.status {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.status--success {
+  color: #7ee787;
+}
+
+.status--error {
+  color: var(--danger);
+}
+
+.status--pending {
+  color: var(--accent);
+}
+
 .button {
   border: 0;
   border-radius: 14px;

@@ -5,6 +5,7 @@ Static feedback page that submits to Web3Forms.
 
 ## Files
 - `index.html`: page + Web3Forms form
+- `about/index.html`: about page served at `/about/`
 - `styles.css`: styling
 
 ## Deploy
