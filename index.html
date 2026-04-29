@@ -49,7 +49,6 @@
             <input type="hidden" name="subject" value="New feedback submission" />
             <input type="hidden" name="from_name" value="feedback.uft1.com" />
             <input type="hidden" name="context" id="context" value="" />
-            <input type="hidden" name="context_title" id="context-title" value="" />
 
             <div class="field">
               <label for="name">Name</label>
@@ -110,7 +109,6 @@
       const form = document.getElementById('feedback-form');
       const statusEl = document.getElementById('form-status');
       const contextField = document.getElementById('context');
-      const contextTitleField = document.getElementById('context-title');
       const contextBanner = document.getElementById('context-banner');
       const contextEyebrow = document.getElementById('context-eyebrow');
       const contextHeadline = document.getElementById('context-headline');
@@ -125,24 +123,29 @@
         statusEl.className = `status status--${type}`;
       }
 
-      function resolveContextLabel(contextValue, contextTitleValue) {
-        const normalizedContext = contextValue.trim().toLowerCase();
+      function slugToTitle(slug) {
+        return slug
+          .split(/[-_]+/g)
+          .filter(Boolean)
+          .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+          .join(' ');
+      }
 
-        if (contextTitleValue.trim()) {
-          return contextTitleValue.trim();
-        }
+      function resolveContextLabel(contextValue) {
+        const normalizedContext = contextValue.trim().toLowerCase();
 
         if (
           normalizedContext === 'sfl' ||
           normalizedContext === 'sunflower-land' ||
           normalizedContext === 'sunflower land' ||
-          normalizedContext === 'sunflower-land-digging-assistant'
+          normalizedContext === 'sunflower-land-digging-assistant' ||
+          normalizedContext === 'sunflower_land_digging_assistant'
         ) {
           return 'Sunflower Land digging assistant';
         }
 
         if (contextValue.trim()) {
-          return contextValue.trim();
+          return slugToTitle(contextValue.trim());
         }
 
         return 'this tool';
@@ -152,16 +155,10 @@
         const params = new URLSearchParams(window.location.search);
 
         const contextValue = params.get('context') || params.get('for') || '';
-        const contextTitleValue = params.get('title') || params.get('otherinfo') || '';
-        const hasContext = Boolean(contextValue.trim() || contextTitleValue.trim());
-        const labels = {
-          context: contextValue.trim(),
-          title: contextTitleValue.trim(),
-        };
-        const targetLabel = resolveContextLabel(contextValue, contextTitleValue);
+        const hasContext = Boolean(contextValue.trim());
+        const targetLabel = resolveContextLabel(contextValue);
 
         contextField.value = contextValue;
-        contextTitleField.value = contextTitleValue;
 
         if (hasContext) {
           contextEyebrow.textContent = 'Feedback for a specific tool';
@@ -169,19 +166,11 @@
           contextText.textContent = `This form is dedicated to feedback for ${targetLabel}.`;
           contextDetails.innerHTML = '';
 
-          if (labels.context) {
+          if (contextValue.trim()) {
             const dt = document.createElement('dt');
             dt.textContent = 'context';
             const dd = document.createElement('dd');
-            dd.textContent = labels.context;
-            contextDetails.append(dt, dd);
-          }
-
-          if (labels.title) {
-            const dt = document.createElement('dt');
-            dt.textContent = 'title';
-            const dd = document.createElement('dd');
-            dd.textContent = labels.title;
+            dd.textContent = contextValue.trim();
             contextDetails.append(dt, dd);
           }
 

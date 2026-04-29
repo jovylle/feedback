@@ -24,23 +24,28 @@
 
           <ul class="bullets" aria-label="What this page does">
             <li>Quick feedback form with no account required</li>
-            <li>Supports query params like <code>?context=sunflower-land-digging-assistant&title=Sunflower%20Land%20digging%20assistant</code></li>
+            <li>Supports query params like <code>?context=sunflower-land-digging-assistant</code></li>
             <li>Safety-first: stay on the page during submission</li>
           </ul>
 
           <p class="hint">
-            If you load <code>/?context=...&title=...</code>, those values are
-            attached to the submission and shown as page context.
+            If you load <code>/?context=...</code>, that slug is attached to the
+            submission and shown as page context.
           </p>
 
           <p class="hint">
             Recommended link for your tool:
-            <code>https://feedback.uft1.com/?context=sunflower-land-digging-assistant&title=Sunflower%20Land%20digging%20assistant</code>
+            <code>https://feedback.uft1.com/?context=sunflower-land-digging-assistant</code>
           </p>
 
           <p class="hint">
-            Backward compatible: the old <code>?for=...</code> and
-            <code>?otherinfo=...</code> links still work.
+            The label is derived from the slug automatically, so
+            <code>?context=chat-widget</code> becomes Chat widget and
+            <code>?context=portfolio</code> becomes Portfolio.
+          </p>
+
+          <p class="hint">
+            Backward compatible: the old <code>?for=...</code> link still works.
           </p>
 
           <p class="meta">
