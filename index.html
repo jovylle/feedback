@@ -20,6 +20,10 @@
             Have a suggestion, found a bug, or want to request something? Drop it
             here—takes under a minute.
           </p>
+          <div class="context" id="context-banner" hidden>
+            <p class="context__title">Feedback context</p>
+            <p class="context__text" id="context-text"></p>
+          </div>
           <ul class="bullets" aria-label="Why share feedback">
             <li>Quick and simple</li>
             <li>No account needed</li>
@@ -109,6 +113,10 @@
       const statusEl = document.getElementById('form-status');
       const otherInfo = document.getElementById('otherinfo');
       const forField = document.getElementById('for');
+      const contextBanner = document.getElementById('context-banner');
+      const contextText = document.getElementById('context-text');
+
+      const DEFAULT_CONTEXT = 'Sunflower Land digging assistant feedback';
 
       function setStatus(message, type) {
         statusEl.textContent = message;
@@ -117,11 +125,36 @@
 
       function parseQuery() {
         const params = new URLSearchParams(window.location.search);
+
+        let hasContext = false;
+        let label = DEFAULT_CONTEXT;
+
         if (params.has('otherinfo')) {
-          otherInfo.value = params.get('otherinfo') || '';
+          const otherInfoValue = params.get('otherinfo') || '';
+          otherInfo.value = otherInfoValue;
+          if (otherInfoValue.trim()) {
+            label = otherInfoValue.trim();
+            hasContext = true;
+          }
         }
         if (params.has('for')) {
-          forField.value = params.get('for') || '';
+          const forValue = params.get('for') || '';
+          forField.value = forValue;
+          if (forValue.trim()) {
+            hasContext = true;
+            const normalized = forValue.trim().toLowerCase();
+            if (normalized === 'sfl' || normalized === 'sunflower-land' || normalized === 'sunflower land') {
+              label = 'Sunflower Land digging assistant';
+            }
+          }
+        }
+
+        if (hasContext) {
+          contextText.textContent = `This form is collecting feedback for ${label}.`;
+          contextBanner.hidden = false;
+        } else {
+          contextText.textContent = '';
+          contextBanner.hidden = true;
         }
       }
 
