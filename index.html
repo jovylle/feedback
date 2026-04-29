@@ -48,8 +48,8 @@
             />
             <input type="hidden" name="subject" value="New feedback submission" />
             <input type="hidden" name="from_name" value="feedback.uft1.com" />
-            <input type="hidden" name="otherinfo" id="otherinfo" value="" />
-            <input type="hidden" name="for" id="for" value="" />
+            <input type="hidden" name="context" id="context" value="" />
+            <input type="hidden" name="context_title" id="context-title" value="" />
 
             <div class="field">
               <label for="name">Name</label>
@@ -109,8 +109,8 @@
     <script>
       const form = document.getElementById('feedback-form');
       const statusEl = document.getElementById('form-status');
-      const otherInfo = document.getElementById('otherinfo');
-      const forField = document.getElementById('for');
+      const contextField = document.getElementById('context');
+      const contextTitleField = document.getElementById('context-title');
       const contextBanner = document.getElementById('context-banner');
       const contextEyebrow = document.getElementById('context-eyebrow');
       const contextHeadline = document.getElementById('context-headline');
@@ -125,22 +125,24 @@
         statusEl.className = `status status--${type}`;
       }
 
-      function resolveTargetLabel(forValue, otherInfoValue) {
-        const normalizedFor = forValue.trim().toLowerCase();
+      function resolveContextLabel(contextValue, contextTitleValue) {
+        const normalizedContext = contextValue.trim().toLowerCase();
+
+        if (contextTitleValue.trim()) {
+          return contextTitleValue.trim();
+        }
+
         if (
-          normalizedFor === 'sfl' ||
-          normalizedFor === 'sunflower-land' ||
-          normalizedFor === 'sunflower land'
+          normalizedContext === 'sfl' ||
+          normalizedContext === 'sunflower-land' ||
+          normalizedContext === 'sunflower land' ||
+          normalizedContext === 'sunflower-land-digging-assistant'
         ) {
           return 'Sunflower Land digging assistant';
         }
 
-        if (otherInfoValue.trim()) {
-          return otherInfoValue.trim();
-        }
-
-        if (forValue.trim()) {
-          return forValue.trim();
+        if (contextValue.trim()) {
+          return contextValue.trim();
         }
 
         return 'this tool';
@@ -149,41 +151,41 @@
       function parseQuery() {
         const params = new URLSearchParams(window.location.search);
 
-        const forValue = params.get('for') || '';
-        const otherInfoValue = params.get('otherinfo') || '';
-        const hasContext = Boolean(forValue.trim() || otherInfoValue.trim());
+        const contextValue = params.get('context') || params.get('for') || '';
+        const contextTitleValue = params.get('title') || params.get('otherinfo') || '';
+        const hasContext = Boolean(contextValue.trim() || contextTitleValue.trim());
         const labels = {
-          for: forValue.trim(),
-          otherinfo: otherInfoValue.trim(),
+          context: contextValue.trim(),
+          title: contextTitleValue.trim(),
         };
-        const targetLabel = resolveTargetLabel(forValue, otherInfoValue);
+        const targetLabel = resolveContextLabel(contextValue, contextTitleValue);
 
-        otherInfo.value = otherInfoValue;
-        forField.value = forValue;
+        contextField.value = contextValue;
+        contextTitleField.value = contextTitleValue;
 
         if (hasContext) {
           contextEyebrow.textContent = 'Feedback for a specific tool';
-          contextHeadline.textContent = targetLabel;
+          contextHeadline.textContent = `Feedback for ${targetLabel}`;
           contextText.textContent = `This form is dedicated to feedback for ${targetLabel}.`;
           contextDetails.innerHTML = '';
 
-          if (labels.for) {
+          if (labels.context) {
             const dt = document.createElement('dt');
-            dt.textContent = 'for';
+            dt.textContent = 'context';
             const dd = document.createElement('dd');
-            dd.textContent = labels.for;
+            dd.textContent = labels.context;
             contextDetails.append(dt, dd);
           }
 
-          if (labels.otherinfo) {
+          if (labels.title) {
             const dt = document.createElement('dt');
-            dt.textContent = 'otherinfo';
+            dt.textContent = 'title';
             const dd = document.createElement('dd');
-            dd.textContent = labels.otherinfo;
+            dd.textContent = labels.title;
             contextDetails.append(dt, dd);
           }
 
-          document.title = `${targetLabel} feedback`;
+          document.title = `Feedback for ${targetLabel}`;
         } else {
           contextEyebrow.textContent = 'General feedback';
           contextHeadline.textContent = DEFAULT_TITLE;
