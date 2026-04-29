@@ -3,10 +3,24 @@
 
 Static feedback page that submits to Web3Forms.
 
+## Usage
+- General feedback: `https://feedback.uft1.com/`
+- Context-specific feedback: `https://feedback.uft1.com/?context=sunflower-land-digging-assistant`
+
+The page shows a neutral general-feedback state with no query string. When a `context` slug is present, the page switches into a dedicated context-specific mode and derives the visitor-facing label from that slug.
+
 ## Files
 - `index.html`: page + Web3Forms form
 - `about/index.html`: about page served at `/about/`
 - `styles.css`: styling
+
+Example slugs:
+- `chat-widget`
+- `portfolio`
+- `sunflower-land-digging-assistant`
+
+The page derives the visible label from the `context` slug automatically.
+`sunflower-land-digging-assistant` becomes `Sunflower Land digging assistant`.
 
 ## Deploy
 Host as a static site at `feedback.uft1.com` (any static hosting works):
@@ -16,3 +30,7 @@ Host as a static site at `feedback.uft1.com` (any static hosting works):
 ## Form handling
 Submissions POST to `https://api.web3forms.com/submit` using the embedded `access_key`.
 
+## Context rules
+- Use a single `context` query parameter for the slug.
+- Example slugs: `chat-widget`, `portfolio`, `sunflower-land-digging-assistant`.
+- The UI converts the slug to a readable label automatically.

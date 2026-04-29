@@ -18,19 +18,19 @@
           <h1>About this feedback page</h1>
           <p class="lede">
             This is a small static feedback portal for ideas, bugs, and requests.
-            In your case it can be framed as the feedback inbox for your
-            Sunflower Land digging assistant tool.
+            Load the root URL for general feedback, or add a <code>context</code>
+            slug to make the page clearly dedicated to a specific tool.
           </p>
 
           <ul class="bullets" aria-label="What this page does">
-            <li>Quick feedback form with no account required</li>
-            <li>Supports query params like <code>?context=sunflower-land-digging-assistant</code></li>
-            <li>Safety-first: stay on the page during submission</li>
+            <li>General feedback lives at <code>/</code></li>
+            <li>Context-specific feedback uses <code>?context=...</code></li>
+            <li>The visible label is derived from the slug automatically</li>
           </ul>
 
           <p class="hint">
-            If you load <code>/?context=...</code>, that slug is attached to the
-            submission and shown as page context.
+            If you load <code>/?context=...</code>, the page title, banner, and
+            submission data all reflect that context.
           </p>
 
           <p class="hint">
@@ -39,8 +39,7 @@
           </p>
 
           <p class="hint">
-            The label is derived from the slug automatically, so
-            <code>?context=chat-widget</code> becomes Chat widget and
+            Examples: <code>?context=chat-widget</code> becomes Chat widget and
             <code>?context=portfolio</code> becomes Portfolio.
           </p>
 
@@ -57,8 +56,8 @@
 
       <footer class="footer" aria-label="Footer">
         <p>
-          Tip: for Sunflower Land digging feedback, include the page, what you
-          expected, and what actually happened.
+          Tip: include what you were using, what you expected, and what actually
+          happened.
         </p>
       </footer>
     </main>
