@@ -14,15 +14,13 @@
     <main class="page">
       <header class="hero" aria-label="Feedback page">
         <div class="hero__content">
-          <p class="kicker">feedback.uft1.com</p>
-          <h1>Send feedback</h1>
-          <p class="lede">
-            Have a suggestion, found a bug, or want to request something? Drop it
-            here—takes under a minute.
-          </p>
-          <div class="context" id="context-banner" hidden>
-            <p class="context__title">Feedback context</p>
-            <p class="context__text" id="context-text"></p>
+          <div class="context context--page" id="context-banner" aria-live="polite">
+            <p class="context__title" id="context-eyebrow">General feedback</p>
+            <h1 class="context__headline" id="context-headline">Feedback form</h1>
+            <p class="context__text" id="context-text">
+              Use this form for general feedback, bugs, or requests.
+            </p>
+            <dl class="context__details" id="context-details"></dl>
           </div>
           <ul class="bullets" aria-label="Why share feedback">
             <li>Quick and simple</li>
@@ -114,47 +112,84 @@
       const otherInfo = document.getElementById('otherinfo');
       const forField = document.getElementById('for');
       const contextBanner = document.getElementById('context-banner');
+      const contextEyebrow = document.getElementById('context-eyebrow');
+      const contextHeadline = document.getElementById('context-headline');
       const contextText = document.getElementById('context-text');
+      const contextDetails = document.getElementById('context-details');
 
-      const DEFAULT_CONTEXT = 'Sunflower Land digging assistant feedback';
+      const DEFAULT_TITLE = 'Feedback form';
+      const DEFAULT_TEXT = 'Use this form for general feedback, bugs, or requests.';
 
       function setStatus(message, type) {
         statusEl.textContent = message;
         statusEl.className = `status status--${type}`;
       }
 
+      function resolveTargetLabel(forValue, otherInfoValue) {
+        const normalizedFor = forValue.trim().toLowerCase();
+        if (
+          normalizedFor === 'sfl' ||
+          normalizedFor === 'sunflower-land' ||
+          normalizedFor === 'sunflower land'
+        ) {
+          return 'Sunflower Land digging assistant';
+        }
+
+        if (otherInfoValue.trim()) {
+          return otherInfoValue.trim();
+        }
+
+        if (forValue.trim()) {
+          return forValue.trim();
+        }
+
+        return 'this tool';
+      }
+
       function parseQuery() {
         const params = new URLSearchParams(window.location.search);
 
-        let hasContext = false;
-        let label = DEFAULT_CONTEXT;
+        const forValue = params.get('for') || '';
+        const otherInfoValue = params.get('otherinfo') || '';
+        const hasContext = Boolean(forValue.trim() || otherInfoValue.trim());
+        const labels = {
+          for: forValue.trim(),
+          otherinfo: otherInfoValue.trim(),
+        };
+        const targetLabel = resolveTargetLabel(forValue, otherInfoValue);
 
-        if (params.has('otherinfo')) {
-          const otherInfoValue = params.get('otherinfo') || '';
-          otherInfo.value = otherInfoValue;
-          if (otherInfoValue.trim()) {
-            label = otherInfoValue.trim();
-            hasContext = true;
-          }
-        }
-        if (params.has('for')) {
-          const forValue = params.get('for') || '';
-          forField.value = forValue;
-          if (forValue.trim()) {
-            hasContext = true;
-            const normalized = forValue.trim().toLowerCase();
-            if (normalized === 'sfl' || normalized === 'sunflower-land' || normalized === 'sunflower land') {
-              label = 'Sunflower Land digging assistant';
-            }
-          }
-        }
+        otherInfo.value = otherInfoValue;
+        forField.value = forValue;
 
         if (hasContext) {
-          contextText.textContent = `This form is collecting feedback for ${label}.`;
-          contextBanner.hidden = false;
+          contextEyebrow.textContent = 'Feedback for a specific tool';
+          contextHeadline.textContent = targetLabel;
+          contextText.textContent = `This form is dedicated to feedback for ${targetLabel}.`;
+          contextDetails.innerHTML = '';
+
+          if (labels.for) {
+            const dt = document.createElement('dt');
+            dt.textContent = 'for';
+            const dd = document.createElement('dd');
+            dd.textContent = labels.for;
+            contextDetails.append(dt, dd);
+          }
+
+          if (labels.otherinfo) {
+            const dt = document.createElement('dt');
+            dt.textContent = 'otherinfo';
+            const dd = document.createElement('dd');
+            dd.textContent = labels.otherinfo;
+            contextDetails.append(dt, dd);
+          }
+
+          document.title = `${targetLabel} feedback`;
         } else {
-          contextText.textContent = '';
-          contextBanner.hidden = true;
+          contextEyebrow.textContent = 'General feedback';
+          contextHeadline.textContent = DEFAULT_TITLE;
+          contextText.textContent = DEFAULT_TEXT;
+          contextDetails.replaceChildren();
+          document.title = 'Feedback';
         }
       }
 
